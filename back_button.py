@@ -1,4 +1,3 @@
-import pygame
 import os
 from button import Button
 
