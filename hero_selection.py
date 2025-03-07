@@ -1,6 +1,7 @@
 import pygame
 import os
 import time
+import random
 from button import Button
 from back_button import BackButton
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT
@@ -12,50 +13,54 @@ class HeroSelection:
         self.game_instance = game_instance
         self.screen = game_instance.screen
         self.visible = False  # Hero selection starts hidden
-        self.background_menu = background_menu  # Use the same video background as MainMenu and GameModes
+        self.background_menu = background_menu
+        self.audio_manager = game_instance.audio_manager
 
-        # Load background border with scaling
+        # Load background border
         border_path = os.path.join(game_instance.script_dir, "images", "buttons", "game modes", "hero selection",
                                    "choose_hero_border.png")
         self.border_img = pygame.image.load(border_path)
-        self.border_scale = 1.0  # Default scale for the border
-        self.border_img = pygame.transform.scale(self.border_img, (
-            int(self.border_img.get_width() * self.border_scale),
-            int(self.border_img.get_height() * self.border_scale)
-        ))
-        self.border_rect = self.border_img.get_rect(center=(SCREEN_WIDTH // 2 , SCREEN_HEIGHT // 2))
+        self.border_rect = self.border_img.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
 
-        # Character button positions DIRECTLY on the border (overlapping it)
+        # Character button positions
         self.positions = {
-            "boy": (self.border_rect.centerx - 300, self.border_rect.centery + 30),  # On the left side of the border
-            "girl": (self.border_rect.centerx + 300, self.border_rect.centery + 30)  # On the right side of the border
+            "boy": (self.border_rect.centerx - 300, self.border_rect.centery + 30),
+            "girl": (self.border_rect.centerx + 300, self.border_rect.centery + 30)
         }
 
-        # Load character buttons with scaling (increased scale for better visibility)
+        # Load character buttons with scaling
         self.buttons = {
-            "boy": self.create_button("boy", self.positions["boy"], scale=0.7),
-            "girl": self.create_button("girl", self.positions["girl"], scale=0.7)
+            "boy": self.create_button("boy", self.positions["boy"], scale=0.7, freeze_duration = 1),
+            "girl": self.create_button("girl", self.positions["girl"], scale=0.7, freeze_duration = 1)
         }
 
-        # Add Back button in the top-left corner
+        # Add Back button
         self.back_button = BackButton(
             self.screen,
             self.game_instance.script_dir,
             self.go_back,
             audio_manager=self.game_instance.audio_manager,
-            position=(100, 100),  # Top-left corner
+            position=(100, 100),
             scale=0.25
         )
 
-        self.selected_hero = None  # Stores selected hero
-        self.selection_time = None  # Stores time when selection is made
+        # Load hero voicelines
+        self.voicelines = {
+            "boy": [
+                os.path.join(game_instance.script_dir, "audio", "voiceline", "boy", "hero selection", f"boy_voice_{i}.mp3") for i in range(1, 4)
+            ],
+            "girl": [
+                os.path.join(game_instance.script_dir, "audio", "voiceline", "girl", "hero selection", f"girl_voice_{i}.mp3") for i in range(1, 4)
+            ]
+        }
 
-    def create_button(self, name, position, scale=1.0):
-        """Helper to create buttons for selecting a hero."""
-        base_path = os.path.join(
-            self.game_instance.script_dir, "images", "buttons", "game modes", "hero selection"
-        )
-        print(f"Creating {name} button at {position} with scale {scale}")  # Debug button creation
+        self.selected_hero = None
+        self.selection_time = None
+        self.voiceline_sound = None
+
+    def create_button(self, name, position, scale=1.0, freeze_duration=0):
+        """Helper to create buttons with optional freeze duration."""
+        base_path = os.path.join(self.game_instance.script_dir, "images", "buttons", "game modes", "hero selection")
         return Button(
             position[0], position[1],
             os.path.join(base_path, f"{name}_hero_border_img.png"),
@@ -63,47 +68,69 @@ class HeroSelection:
             os.path.join(base_path, f"{name}_hero_border_click.png"),
             lambda: self.select_hero(name),
             scale=scale,
-            audio_manager=self.game_instance.audio_manager
+            audio_manager=self.game_instance.audio_manager,
+            freeze_duration=freeze_duration
         )
 
+    def play_random_voiceline(self, hero):
+        """Play a random voiceline for the selected hero if audio is enabled."""
+        if not self.audio_manager.audio_enabled:  # 🔇 Check if audio is muted
+            print(f"Audio is muted. Skipping {hero} voiceline.")
+            return
+        if self.voiceline_sound:
+            self.voiceline_sound.stop()
+        try:
+            random_voiceline = random.choice(self.voicelines[hero])
+            self.voiceline_sound = pygame.mixer.Sound(random_voiceline)
+            self.voiceline_sound.play()
+        except Exception as e:
+            print(f"Error playing voiceline: {e}")
+
     def select_hero(self, hero):
-        """Handles character selection and freezes input for 2 seconds."""
-        if self.selection_time is None:  # Prevent multiple clicks
+        """Handles character selection and respects audio settings."""
+        if self.selection_time is None:
             print(f"Hero {hero.upper()} selected!")
             self.selected_hero = hero
-            self.selection_time = time.time()  # Start 2-second delay
+            self.selection_time = time.time()
+            # 🔊 Only play voiceline if audio is enabled
+            self.play_random_voiceline(hero)
+            for button in self.buttons.values():
+                button.active = False
+            self.buttons[hero].current_image = self.buttons[hero].click_img
+            self.draw()
+            pygame.display.update()
 
     def update(self, event):
         """Handles button interactions and enforces click delay."""
         if self.visible:
-            if self.selection_time is None:  # No freeze, allow input
+            if self.selection_time is None:
                 for button in self.buttons.values():
                     button.update(event)
                 self.back_button.update(event)
             else:
-                # Check if 2 seconds have passed since selection
-                if time.time() - self.selection_time > 2:
+                if time.time() - self.selection_time >= 1:
                     print(f"Confirmed {self.selected_hero.upper()} as the hero!")
-                    self.selection_time = None  # Reset delay
-                    self.visible = False  # Hide selection screen
-                    # TODO: Move to the next game phase
+                    self.selection_time = None
+                    self.visible = False
+
+                    for button in self.buttons.values():
+                        button.active = True
 
     def draw(self):
-        """Draw background and the active screen."""
-        # Draw the video background
+        """Draw the hero selection screen."""
         frame_surface = self.background_menu.get_frame()
         frame_surface = pygame.transform.scale(frame_surface, (SCREEN_WIDTH, SCREEN_HEIGHT))
         self.screen.blit(frame_surface, (0, 0))
 
         if self.visible:
-            # Draw the background border first
             self.screen.blit(self.border_img, self.border_rect.topleft)
 
-            # Ensure character selection buttons are drawn on top of the border
-            for name, button in self.buttons.items():
-                button.draw(self.screen)  # Buttons will now be in front
+            if self.selected_hero:
+                self.buttons[self.selected_hero].current_image = self.buttons[self.selected_hero].click_img
 
-            # Draw the back button on top of everything else
+            for button in self.buttons.values():
+                button.draw(self.screen)
+
             self.back_button.draw()
 
         pygame.display.update()
@@ -112,7 +139,7 @@ class HeroSelection:
         """Show the hero selection screen."""
         self.visible = True
         self.selected_hero = None
-        self.selection_time = None  # Reset delay
+        self.selection_time = None
         for button in self.buttons.values():
             button.visible = True
             button.active = True
@@ -121,11 +148,14 @@ class HeroSelection:
     def hide(self):
         """Hide the hero selection screen."""
         self.visible = False
+        if self.voiceline_sound:
+            self.voiceline_sound.stop()
+            self.voiceline_sound = None
         print("Hero selection screen closed.")
 
     def go_back(self):
         """Handles Back button click."""
         print("Back button clicked!")
-        self.hide()  # Hide hero selection
+        self.hide()
         if self.game_instance:
-            self.game_instance.game_modes.show()  # Show game modes
+            self.game_instance.game_modes.show()

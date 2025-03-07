@@ -118,63 +118,65 @@ class MainMenu:
     def create_buttons(self):
         # Create main menu buttons
         self.play_button = Button(920, 670, self.button_images['play']['normal'],
-                                  self.button_images['play']['hover'],
-                                  self.button_images['play']['click'],
-                                  self.play_game, scale=0.50, audio_manager=self.audio_manager)
+          self.button_images['play']['hover'],
+          self.button_images['play']['click'],
+          self.play_game, scale=0.50, audio_manager=self.audio_manager)
 
         self.options_button = Button(920, 750, self.button_images['options']['normal'],
-                                     self.button_images['options']['hover'],
-                                     self.button_images['options']['click'],
-                                     self.open_options, scale=0.50, audio_manager=self.audio_manager)
+         self.button_images['options']['hover'],
+         self.button_images['options']['click'],
+         self.open_options, scale=0.50, audio_manager=self.audio_manager)
 
         self.credits_button = Button(920, 830, self.button_images['credits']['normal'],
-                                     self.button_images['credits']['hover'],
-                                     self.button_images['credits']['click'],
-                                     self.show_credits, scale=0.50, audio_manager=self.audio_manager)
+         self.button_images['credits']['hover'],
+         self.button_images['credits']['click'],
+         self.show_credits, scale=0.50, audio_manager=self.audio_manager)
 
         self.exit_button = Button(920, 910, self.button_images['exit']['normal'],
-                                  self.button_images['exit']['hover'],
-                                  self.button_images['exit']['click'],
-                                  self.exit_game, scale=0.50, audio_manager=self.audio_manager)
+          self.button_images['exit']['hover'],
+          self.button_images['exit']['click'],
+          self.exit_game, scale=0.50, audio_manager=self.audio_manager)
 
         self.menu_buttons = [self.play_button, self.options_button, self.credits_button, self.exit_button]
 
         # Create exit confirmation buttons
         self.yes_button = Button(SCREEN_WIDTH // 2 - 140, SCREEN_HEIGHT // 2 + 130,
-                                 self.exit_button_images['yes']['normal'],
-                                 self.exit_button_images['yes']['hover'],
-                                 None, self.confirm_exit, scale=0.4, audio_manager=self.audio_manager)
+         self.exit_button_images['yes']['normal'],
+         self.exit_button_images['yes']['hover'],
+         None, self.confirm_exit, scale=0.4, audio_manager=self.audio_manager)
 
         self.no_button = Button(SCREEN_WIDTH // 2 + 140, SCREEN_HEIGHT // 2 + 130,
-                                self.exit_button_images['no']['normal'],
-                                self.exit_button_images['no']['hover'],
-                                None, self.cancel_exit, scale=0.4, audio_manager=self.audio_manager)
+            self.exit_button_images['no']['normal'],
+            self.exit_button_images['no']['hover'],
+            None, self.cancel_exit, scale=0.4, audio_manager=self.audio_manager)
 
         # Create settings buttons
-        self.audio_toggle_button = Button(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 50,
-                                          self.audio_on_img, self.audio_on_img,
-                                          None, self.toggle_audio, scale=1.0, audio_manager=self.audio_manager)
+        self.audio_toggle_button = Button(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 10,
+            self.audio_on_img, self.audio_on_img,
+            None, self.toggle_audio,
+            scale=1.0, audio_manager=self.audio_manager
+        )
 
         self.apply_button = Button(SCREEN_WIDTH // 2 - 140, SCREEN_HEIGHT // 2 + 130,
-                                   self.settings_button_images['apply']['normal'],
-                                   self.settings_button_images['apply']['hover'],
-                                   None, self.apply_settings, scale=0.4, audio_manager=self.audio_manager)
+           self.settings_button_images['apply']['normal'],
+           self.settings_button_images['apply']['hover'],
+           None, self.apply_settings, scale=0.4, audio_manager=self.audio_manager)
 
         self.discard_button = Button(SCREEN_WIDTH // 2 + 140, SCREEN_HEIGHT // 2 + 130,
-                                     self.settings_button_images['discard']['normal'],
-                                     self.settings_button_images['discard']['hover'],
-                                     None, self.discard_settings, scale=0.4, audio_manager=self.audio_manager)
+         self.settings_button_images['discard']['normal'],
+         self.settings_button_images['discard']['hover'],
+         None, self.discard_settings, scale=0.4, audio_manager=self.audio_manager)
 
         self.confirm_apply_button = Button(SCREEN_WIDTH // 2 - 140, SCREEN_HEIGHT // 2 + 130,
-                                           self.settings_button_images['apply']['normal'],
-                                           self.settings_button_images['apply']['hover'],
-                                           None, self.confirm_apply_settings, scale=0.4,
-                                           audio_manager=self.audio_manager)
+           self.settings_button_images['apply']['normal'],
+           self.settings_button_images['apply']['hover'],
+           None, self.confirm_apply_settings, scale=0.4,
+           audio_manager=self.audio_manager)
 
         self.cancel_apply_button = Button(SCREEN_WIDTH // 2 + 140, SCREEN_HEIGHT // 2 + 130,
-                                          self.settings_button_images['discard']['normal'],
-                                          self.settings_button_images['discard']['hover'],
-                                          None, self.cancel_apply_settings, scale=0.4, audio_manager=self.audio_manager)
+          self.settings_button_images['discard']['normal'],
+          self.settings_button_images['discard']['hover'],
+          None, self.cancel_apply_settings, scale=0.4, audio_manager=self.audio_manager)
 
     def play_game(self):
         print("Play button clicked!")
