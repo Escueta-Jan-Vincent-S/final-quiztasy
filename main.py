@@ -27,8 +27,8 @@ class FinalQuiztasy:
         self.setup_background()
         self.setup_audio()
         self.main_menu = MainMenu(self.screen, self.audio_manager, self.script_dir, exit_callback=self.exit_game, game_instance=self)
+        self.hero_selection = HeroSelection(self, self.background_menu)  # Pass background_menu
         self.game_modes = GameModes(self.screen, self.audio_manager, self.script_dir, scale=1.0, game_instance=self)
-        self.hero_selection = HeroSelection(self)
 
         # Clock for controlling frame rate
         self.clock = pygame.time.Clock()
@@ -51,8 +51,11 @@ class FinalQuiztasy:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
-            # Pass events to the main menu
-            self.main_menu.handle_events(event)
+            # Pass events to the main menu or hero selection based on visibility
+            if hasattr(self, 'hero_selection') and self.hero_selection.visible:
+                self.hero_selection.update(event)
+            else:
+                self.main_menu.handle_events(event)
 
     def draw(self):
         # Draw background
@@ -60,8 +63,11 @@ class FinalQuiztasy:
         frame_surface = pygame.transform.scale(frame_surface, (SCREEN_WIDTH, SCREEN_HEIGHT))
         self.screen.blit(frame_surface, (0, 0))
 
-        # Draw the main menu
-        self.main_menu.draw()
+        # Draw the main menu or hero selection based on visibility
+        if hasattr(self, 'hero_selection') and self.hero_selection.visible:
+            self.hero_selection.draw()
+        else:
+            self.main_menu.draw()
 
     def run(self):
         # Main game loop
