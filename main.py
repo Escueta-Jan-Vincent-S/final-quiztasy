@@ -6,6 +6,7 @@ from audio_manager import AudioManager
 from main_menu import MainMenu
 from game_modes import GameModes
 from hero_selection import HeroSelection
+from map import Map
 
 class FinalQuiztasy:
     def __init__(self):
@@ -29,6 +30,7 @@ class FinalQuiztasy:
         self.main_menu = MainMenu(self.screen, self.audio_manager, self.script_dir, exit_callback=self.exit_game, game_instance=self)
         self.hero_selection = HeroSelection(self, self.background_menu)  # Pass background_menu
         self.game_modes = GameModes(self.screen, self.audio_manager, self.script_dir, scale=1.0, game_instance=self)
+        self.lspu_map = None
 
         # Clock for controlling frame rate
         self.clock = pygame.time.Clock()
@@ -46,6 +48,41 @@ class FinalQuiztasy:
     def exit_game(self):
         """Callback function to exit the game."""
         self.running = False
+
+    def map(self, hero_ost_path):
+        """Stops menu music, plays hero-specific LSPU map music, and loads the map."""
+        print("Loading LSPU Map...")
+
+        # Stop the main menu music
+        if self.audio_manager:
+            self.audio_manager.stop_music()
+
+        # ✅ Use None for the click SFX path (Handled in AudioManager)
+        self.map_audio_manager = AudioManager(hero_ost_path, None)
+        self.map_audio_manager.play_music()
+
+        # Load the map with a callback to return to the main menu
+        self.lspu_map = Map(self.screen, self.script_dir, self.return_to_main_menu)
+        self.hero_selection.hide()
+        self.running_map = True
+
+        while self.running_map:
+            self.lspu_map.handle_events()
+            self.lspu_map.draw()
+            pygame.display.update()
+            self.clock.tick(FPS)
+
+        # Stop hero-specific map music when exiting
+        self.map_audio_manager.stop_music()
+
+        # Resume main menu music when returning
+        if self.audio_manager:
+            self.audio_manager.play_music()
+
+    def return_to_main_menu(self):
+        """Callback function to return to the main menu."""
+        self.running_map = False  # Stop the map loop
+        self.main_menu.show()  # Show the main menu
 
     def handle_events(self):
         for event in pygame.event.get():

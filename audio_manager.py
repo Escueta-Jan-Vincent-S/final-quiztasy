@@ -4,7 +4,7 @@ class AudioManager:
     def __init__(self, music_path, click_sfx_path):
         pygame.mixer.init()
         self.music_path = music_path
-        self.click_sfx = pygame.mixer.Sound(click_sfx_path)
+        self.click_sfx = None if click_sfx_path is None else pygame.mixer.Sound(click_sfx_path)
         self.is_playing = False
 
         # Single audio state for both music and sound effects
@@ -26,7 +26,7 @@ class AudioManager:
             self.is_playing = False
 
     def play_sfx(self):
-        if self.audio_enabled:
+        if self.audio_enabled and self.click_sfx:
             self.click_sfx.play()
 
     def toggle_audio(self):
@@ -38,11 +38,13 @@ class AudioManager:
                 self.play_music()
             else:
                 pygame.mixer.music.set_volume(self.prev_music_volume)
-            self.click_sfx.set_volume(self.prev_sound_volume)
+            if self.click_sfx:
+                self.click_sfx.set_volume(self.prev_sound_volume)
         else:
             # Mute all audio
             pygame.mixer.music.set_volume(0)
-            self.click_sfx.set_volume(0)
+            if self.click_sfx:
+                self.click_sfx.set_volume(0)
 
         print(f"Audio Enabled: {self.audio_enabled}")
         return self.audio_enabled

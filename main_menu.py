@@ -21,6 +21,7 @@ class MainMenu:
         self.show_game_logo = True
         self.exit_callback = exit_callback  # Callback function to exit the game
         self.game_instance = game_instance  # Store the actual game instance
+        self.visible = True
 
         # Load assets
         self.load_assets()
@@ -250,6 +251,14 @@ class MainMenu:
     def cancel_apply_settings(self):
         print("Canceling apply confirmation...")
         self.show_apply_changes = False
+
+    def show(self):
+        """Make the main menu visible."""
+        self.visible = True
+
+    def hide(self):
+        """Hide the main menu."""
+        self.visible = False
 
     def handle_events(self, event):
         if self.show_exit_confirmation:

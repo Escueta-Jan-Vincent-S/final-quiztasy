@@ -100,12 +100,15 @@ class HeroSelection:
             self.draw()
             pygame.display.update()
 
-            # Force the screen to freeze properly for 2 seconds
-            freeze_duration = 2
+            # Force the screen to freeze properly for 3 seconds
+            freeze_duration = 3
             start_time = time.time()
             while time.time() - start_time < freeze_duration:
                 self.draw()
                 pygame.display.update()
+
+            # Select the hero's OST based on selection
+            hero_ost_path = os.path.join(self.game_instance.script_dir, "audio", "ost", hero, f"{hero}_map_ost.mp3")
 
             # Proceed after freeze
             print(f"Confirmed {self.selected_hero.upper()} as the hero!")
@@ -114,6 +117,9 @@ class HeroSelection:
 
             for button in self.buttons.values():
                 button.active = True
+
+            # ✅ Call the correctly named function
+            self.game_instance.map(hero_ost_path)
 
     def update(self, event):
         """Handles button interactions and enforces click delay."""
