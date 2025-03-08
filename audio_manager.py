@@ -32,7 +32,6 @@ class AudioManager:
     def toggle_audio(self):
         """Toggles all audio (both music and sound effects)."""
         self.audio_enabled = not self.audio_enabled
-
         if self.audio_enabled:
             # Re-enable all audio
             if not self.is_playing:
