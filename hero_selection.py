@@ -86,18 +86,34 @@ class HeroSelection:
             print(f"Error playing voiceline: {e}")
 
     def select_hero(self, hero):
-        """Handles character selection and respects audio settings."""
+        """Handles character selection and ensures proper delay before transition."""
         if self.selection_time is None:
             print(f"Hero {hero.upper()} selected!")
             self.selected_hero = hero
             self.selection_time = time.time()
-            # 🔊 Only play voiceline if audio is enabled
             self.play_random_voiceline(hero)
+
             for button in self.buttons.values():
                 button.active = False
+
             self.buttons[hero].current_image = self.buttons[hero].click_img
             self.draw()
             pygame.display.update()
+
+            # Force the screen to freeze properly for 2 seconds
+            freeze_duration = 2
+            start_time = time.time()
+            while time.time() - start_time < freeze_duration:
+                self.draw()
+                pygame.display.update()
+
+            # Proceed after freeze
+            print(f"Confirmed {self.selected_hero.upper()} as the hero!")
+            self.selection_time = None
+            self.visible = False
+
+            for button in self.buttons.values():
+                button.active = True
 
     def update(self, event):
         """Handles button interactions and enforces click delay."""
