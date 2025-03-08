@@ -6,7 +6,6 @@ from button import Button
 from back_button import BackButton
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT
 
-
 class HeroSelection:
     def __init__(self, game_instance, background_menu):
         """Initialize Hero Selection screen with character choices."""
