@@ -13,6 +13,10 @@ class GameModes:
         self.scale = scale  # Scaling factor for buttons
         self.show_new_continue = False  # Controls New/Continue selection
 
+        # Specific scales for border and new/continue buttons
+        self.border_scale = 0.5  # Customize this value for the border
+        self.new_continue_scale = 0.6  # Customize this value for new/continue buttons
+
         # Define button positions
         self.positions = {
             "sp": (960, 280),  # Middle top
@@ -27,13 +31,23 @@ class GameModes:
             "custom": self.create_button(script_dir, "custom", self.positions["custom"])
         }
 
-        # New/Continue selection screen assets
-        self.new_continue_border = pygame.image.load(
+        # New/Continue selection screen assets with custom scaling for border
+        border_image = pygame.image.load(
             os.path.join(script_dir, "images", "buttons", "game modes", "new or continue", "border.png"))
+        # Scale the border image
+        original_border_size = border_image.get_rect().size
+        scaled_border_width = int(original_border_size[0] * self.border_scale)
+        scaled_border_height = int(original_border_size[1] * self.border_scale)
+        self.new_continue_border = pygame.transform.scale(border_image, (scaled_border_width, scaled_border_height))
         self.new_continue_border_rect = self.new_continue_border.get_rect(center=(960, 540))
 
-        self.new_button = self.create_button(script_dir, "new", (960, 440), action=self.start_new_game)
-        self.continue_button = self.create_button(script_dir, "continue", (960, 640), action=self.continue_game)
+        # Create new/continue buttons with custom scaling
+        self.new_button = self.create_button(script_dir, "new", (905, 480),
+                                             action=self.start_new_game,
+                                             button_scale=self.new_continue_scale)
+        self.continue_button = self.create_button(script_dir, "continue", (905, 600),
+                                                  action=self.continue_game,
+                                                  button_scale=self.new_continue_scale)
 
         # Add Back button
         self.back_button = BackButton(self.screen, script_dir, self.go_back, audio_manager=self.audio_manager,
@@ -42,7 +56,6 @@ class GameModes:
     def play_single_player(self):
         print("Playing single-player mode")
         self.show_new_continue = True  # Show new/continue prompt
-        # Instead of just disabling, we'll also prevent hover effects
         for button in self.buttons.values():
             button.active = False  # Disable background buttons when prompt is active
 
@@ -65,8 +78,11 @@ class GameModes:
             button.active = True  # Re-enable buttons when leaving prompt
         # TODO: Implement loading of saved progress
 
-    def create_button(self, script_dir, name, position, action=None):
+    def create_button(self, script_dir, name, position, action=None, button_scale=None):
         """Helper method to create buttons with scaling."""
+        # Use the provided scale or default to the class scale
+        button_scale = button_scale if button_scale is not None else self.scale
+
         folder = "new or continue" if name in ["new", "continue"] else "modes"
         img_path = os.path.join(script_dir, "images", "buttons", "game modes", folder, f"{name}_btn_img.png")
         hover_path = os.path.join(script_dir, "images", "buttons", "game modes", folder, f"{name}_btn_hover.png")
@@ -75,7 +91,7 @@ class GameModes:
 
         return Button(
             position[0], position[1], img_path, hover_path, click_path,
-            action if action else lambda: self.on_click(name), scale=self.scale, audio_manager=self.audio_manager
+            action if action else lambda: self.on_click(name), scale=button_scale, audio_manager=self.audio_manager
         )
 
     def on_click(self, name):
@@ -113,7 +129,6 @@ class GameModes:
     def draw(self):
         if self.visible:
             # Always draw the game mode buttons in the background
-            # But don't update their hover state when prompt is active
             for button in self.buttons.values():
                 button.draw(self.screen)
 
