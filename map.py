@@ -6,6 +6,7 @@ from back_button import BackButton
 class Map:
     def __init__(self, screen, script_dir, go_back_callback):
         """Initialize the LSPU map with a Back button."""
+        self.script_dir = os.path.dirname(os.path.abspath(__file__))
         self.screen = screen
         self.running = True
         self.dragging = False
