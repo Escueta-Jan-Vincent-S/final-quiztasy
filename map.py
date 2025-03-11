@@ -49,29 +49,36 @@ class Map:
 
         # Define levels (black dots) coordinates relative to map
         self.levels = [
-            {"id": 1, "pos": (245, 470), "completed": False},
-            {"id": 2, "pos": (420, 470), "completed": False},
-            {"id": 3, "pos": (550, 150), "completed": False},
-            {"id": 4, "pos": (800, 460), "completed": False},
-            {"id": 5, "pos": (800, 230), "completed": False},
-            {"id": 6, "pos": (1150, 325), "completed": False},
-            {"id": 7, "pos": (1360, 235), "completed": False},
-            {"id": 8, "pos": (1505, 590), "completed": False},
-            {"id": 9, "pos": (1420, 1005), "completed": False},
-            {"id": 10, "pos": (1480, 1150), "completed": False},
-            {"id": 11, "pos": (1910, 1335), "completed": False},
-            {"id": 12, "pos": (1750, 1060), "completed": False},
-            {"id": 13, "pos": (2390, 1075), "completed": False},
-            {"id": 14, "pos": (2390, 780), "completed": False},
+            {"id": 0, "pos": (245, 470), "completed": False},
+            {"id": 1, "pos": (420, 470), "completed": False},
+            {"id": 2, "pos": (550, 150), "completed": False},
+            {"id": 3, "pos": (800, 460), "completed": False},
+            {"id": 4, "pos": (800, 230), "completed": False},
+            {"id": 5, "pos": (1150, 325), "completed": False},
+            {"id": 6, "pos": (1360, 235), "completed": False},
+            {"id": 7, "pos": (1505, 590), "completed": False},
+            {"id": 8, "pos": (1420, 1005), "completed": False},
+            {"id": 9, "pos": (1480, 1150), "completed": False},
+            {"id": 10, "pos": (1910, 1335), "completed": False},
+            {"id": 11, "pos": (1750, 1060), "completed": False},
+            {"id": 12, "pos": (2390, 1075), "completed": False},
+            {"id": 13, "pos": (2390, 780), "completed": False},
+            {"id": 14, "pos": (2196, 732), "completed": False},
+            {"id": 15, "pos": (1770, 460), "completed": False},
+            {"id": 16, "pos": (1880, 115), "completed": False},
+            {"id": 17, "pos": (1990, 285), "completed": False},
+            {"id": 18, "pos": (2287, 493), "completed": False},
+            {"id": 19, "pos": (2425, 300), "completed": False},
+            {"id": 20, "pos": (2425, 75), "completed": False},
         ]
 
         # Define ambush points (red dots A) with 25% chance of triggering
         self.ambush_points = [
-            {"pos": (245, 470), "triggered": False, "chance": 25},
+            {"pos": (1030, 450), "triggered": False, "chance": 25},
         ]
 
         # Current player position (starting at level 1)
-        self.current_level = 1
+        self.current_level = 0
         self.player_pos = self.levels[0]["pos"]
         self.moving = False
         self.movement_path = []
@@ -90,10 +97,10 @@ class Map:
 
     def move_to_level(self, level_id):
         """Set up movement path to the selected level."""
-        if level_id <= len(self.levels) and level_id > 0:
-            # Only allow movement to adjacent levels
-            if level_id == self.current_level + 1 or level_id == self.current_level - 1:
-                target_pos = self.levels[level_id - 1]["pos"]
+        if level_id in [level["id"] for level in self.levels]:  # Ensure the level exists
+            if (self.current_level == 0 and level_id == 1) or \
+                    (isinstance(self.current_level, int) and abs(self.current_level - level_id) == 1):
+                target_pos = next(level["pos"] for level in self.levels if level["id"] == level_id)
                 self.movement_path = self.generate_path(self.player_pos, target_pos)
                 self.moving = True
                 self.current_level = level_id
