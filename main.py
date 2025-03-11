@@ -53,23 +53,20 @@ class FinalQuiztasy:
         self.running = False
 
     def map(self, hero_ost_path):
-        """Stops menu music, plays hero-specific LSPU map music, and loads the map."""
+        """Stops menu music, plays hero-specific map music, and loads the map."""
         print("Loading LSPU Map...")
-
-        # Determine hero type from the hero_ost_path
-        hero_type = "boy" if "boy" in hero_ost_path else "girl"
-        print(f"Selected hero: {hero_type}")
 
         # Stop the main menu music
         if self.audio_manager:
             self.audio_manager.stop_music()
 
-        # ✅ Use None for the click SFX path (Handled in AudioManager)
-        self.map_audio_manager = AudioManager(hero_ost_path, None)
-        self.map_audio_manager.play_music()
+        # ✅ Update the AudioManager with the new OST instead of creating a new instance
+        self.audio_manager.music_path = hero_ost_path
+        if self.audio_manager.audio_enabled:
+            self.audio_manager.play_music()
 
-        # Load the map with a callback to return to the main menu and the hero type
-        self.lspu_map = Map(self.screen, self.script_dir, self.return_to_main_menu, self.audio_manager, hero_type)
+        # Load the map with a callback to return to the main menu
+        self.lspu_map = Map(self.screen, self.script_dir, self.return_to_main_menu, self.audio_manager)
         self.hero_selection.hide()
         self.running_map = True
 
@@ -85,10 +82,11 @@ class FinalQuiztasy:
             self.clock.tick(FPS)
 
         # Stop hero-specific map music when exiting
-        self.map_audio_manager.stop_music()
+        self.audio_manager.stop_music()
 
         # Resume main menu music when returning
-        if self.audio_manager:
+        self.audio_manager.music_path = os.path.join(self.script_dir, "audio", "ost", "menuOst.mp3")
+        if self.audio_manager.audio_enabled:
             self.audio_manager.play_music()
 
     def return_to_main_menu(self):

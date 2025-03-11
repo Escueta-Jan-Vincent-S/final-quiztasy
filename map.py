@@ -19,6 +19,10 @@ class Map:
         # Set the hero type (boy or girl)
         self.hero_type = hero_type if hero_type else "boy"  # Default to boy if not specified
 
+        # Play hero-specific OST if audio is enabled
+        if self.audio_manager.audio_enabled:
+            self.audio_manager.play_music()
+
         # Load and scale the map
         self.map_original = pygame.image.load(os.path.join(script_dir, "images", "map", "lspu_map.png"))
         SCALE_FACTOR = 1.5
@@ -57,6 +61,8 @@ class Map:
             {"id": 10, "pos": (1480, 1150), "completed": False},
             {"id": 11, "pos": (1910, 1335), "completed": False},
             {"id": 12, "pos": (1750, 1060), "completed": False},
+            {"id": 13, "pos": (2390, 1075), "completed": False},
+            {"id": 14, "pos": (2390, 780), "completed": False},
         ]
 
         # Define ambush points (red dots A) with 25% chance of triggering
