@@ -75,6 +75,8 @@ class Map:
         # Define ambush points (red dots A) with 25% chance of triggering
         self.ambush_points = [
             {"pos": (1030, 450), "triggered": False, "chance": 25},
+            {"pos": (1505, 300), "triggered": False, "chance": 25},
+            {"pos": (1445, 1310), "triggered": False, "chance": 25},
         ]
 
         # Current player position (starting at level 1)
