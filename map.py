@@ -40,7 +40,7 @@ class Map:
         icon_path = os.path.join(script_dir, "images", "map", "icons", f"{self.hero_type}_head_img.png")
         try:
             self.player_icon = pygame.image.load(icon_path)
-            self.player_icon = pygame.transform.scale(self.player_icon, (50, 60))
+            self.player_icon = pygame.transform.scale(self.player_icon, (100, 120))
         except pygame.error:
             print(f"Warning: Could not load {icon_path}. Using placeholder.")
             # Create a placeholder icon if file not found
@@ -189,8 +189,12 @@ class Map:
                 ambush_text = self.font.render("A", True, (255, 255, 255))
                 self.screen.blit(ambush_text, (adjusted_pos[0] - 5, adjusted_pos[1] - 10))
 
-        # Draw player icon
-        adjusted_player_pos = (self.map_x + self.player_pos[0] - 25, self.map_y + self.player_pos[1] - 25)
+        # Draw player icon - UPDATED to center the icon on the level position
+        icon_width, icon_height = self.player_icon.get_size()
+        adjusted_player_pos = (
+            self.map_x + self.player_pos[0] - icon_width // 2,
+            self.map_y + self.player_pos[1] - icon_height // 2
+        )
         self.screen.blit(self.player_icon, adjusted_player_pos)
 
         # Draw back button
