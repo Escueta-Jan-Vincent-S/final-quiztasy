@@ -72,6 +72,11 @@ class Map:
             {"id": 20, "pos": (2425, 75), "completed": False},
         ]
 
+        # Define pathways (yellow circles) with connections to levels
+        self.pathways = [
+            {"id": "p1", "pos": (550, 460), "connections": [1, 2]},
+        ]
+
         # Define ambush points (red dots A) with 25% chance of triggering
         self.ambush_points = [
             {"pos": (1030, 450), "triggered": False, "chance": 25},
@@ -88,6 +93,8 @@ class Map:
         self.moving = False
         self.movement_path = []
         self.movement_speed = 5
+        self.at_pathway = False  # Flag to track if player is at a pathway
+        self.current_pathway = None  # Current pathway ID if player is at a pathway
 
         # Font for level numbers
         self.font = pygame.font.SysFont('Arial', 15)
@@ -102,15 +109,68 @@ class Map:
 
     def move_to_level(self, level_id):
         """Set up movement path to the selected level."""
-        if level_id in [level["id"] for level in self.levels]:  # Ensure the level exists
-            if (self.current_level == 0 and level_id == 1) or \
-                    (isinstance(self.current_level, int) and abs(self.current_level - level_id) == 1):
+        # Check if the move is allowed based on current position
+        if self.at_pathway:
+            # If at pathway, check if the level is connected to current pathway
+            if level_id in self.pathways[self.get_pathway_index(self.current_pathway)]["connections"]:
                 target_pos = next(level["pos"] for level in self.levels if level["id"] == level_id)
                 self.movement_path = self.generate_path(self.player_pos, target_pos)
                 self.moving = True
                 self.current_level = level_id
+                self.at_pathway = False
+                self.current_pathway = None
+                return True
+        else:
+            # If at a level, check if the level is adjacent
+            if level_id in [level["id"] for level in self.levels]:  # Ensure the level exists
+                if (self.current_level == 0 and level_id == 1) or \
+                        (isinstance(self.current_level, int) and abs(self.current_level - level_id) == 1):
+                    target_pos = next(level["pos"] for level in self.levels if level["id"] == level_id)
+                    self.movement_path = self.generate_path(self.player_pos, target_pos)
+                    self.moving = True
+                    self.current_level = level_id
+                    return True
+        return False
+
+    def move_to_pathway(self, pathway_id):
+        """Set up movement path to the selected pathway."""
+        pathway_index = self.get_pathway_index(pathway_id)
+        if pathway_index is not None:
+            pathway = self.pathways[pathway_index]
+
+            # Check if current position allows movement to this pathway
+            can_move = False
+
+            if self.at_pathway:
+                # If at another pathway, check if they share a common level connection
+                current_pathway_index = self.get_pathway_index(self.current_pathway)
+                current_connections = self.pathways[current_pathway_index]["connections"]
+                pathway_connections = pathway["connections"]
+
+                # Check if pathways share a common level connection
+                common_connections = set(current_connections).intersection(set(pathway_connections))
+                if common_connections:
+                    can_move = True
+            else:
+                # If at a level, check if the level is connected to the pathway
+                if self.current_level in pathway["connections"]:
+                    can_move = True
+
+            if can_move:
+                target_pos = pathway["pos"]
+                self.movement_path = self.generate_path(self.player_pos, target_pos)
+                self.moving = True
+                self.at_pathway = True
+                self.current_pathway = pathway_id
                 return True
         return False
+
+    def get_pathway_index(self, pathway_id):
+        """Get the index of a pathway by its ID."""
+        for i, pathway in enumerate(self.pathways):
+            if pathway["id"] == pathway_id:
+                return i
+        return None
 
     def generate_path(self, start, end):
         """Generate a simple linear path between two points."""
@@ -155,7 +215,10 @@ class Map:
             # Check if we've reached the end of the path
             if not self.movement_path:
                 self.moving = False
-                self.levels[self.current_level - 1]["completed"] = True
+
+                # If we moved to a level (not a pathway), mark it as completed
+                if not self.at_pathway and self.current_level > 0:
+                    self.levels[self.current_level - 1]["completed"] = True
 
                 # Check for ambush after completing movement
                 if self.check_ambush():
@@ -167,7 +230,14 @@ class Map:
         self.screen.fill((0, 0, 0))
         self.screen.blit(self.map, (self.map_x, self.map_y))
 
-        # Draw levels (black dots)
+        # Draw pathways (yellow circles)
+        for pathway in self.pathways:
+            adjusted_pos = (self.map_x + pathway["pos"][0], self.map_y + pathway["pos"][1])
+
+            # Draw pathway dot (yellow)
+            pygame.draw.circle(self.screen, (255, 255, 0), adjusted_pos, 8)
+
+        # Draw levels (black/green dots)
         for level in self.levels:
             adjusted_pos = (self.map_x + level["pos"][0], self.map_y + level["pos"][1])
 
@@ -222,7 +292,17 @@ class Map:
                             print(f"Moving to level {level['id']}")
                             break
 
-                # If no level was clicked, start dragging
+                # Check if clicked on a pathway
+                for pathway in self.pathways:
+                    adjusted_pos = (self.map_x + pathway["pos"][0], self.map_y + pathway["pos"][1])
+                    distance = ((mouse_x - adjusted_pos[0]) ** 2 + (mouse_y - adjusted_pos[1]) ** 2) ** 0.5
+
+                    if distance < 10 and not self.moving:
+                        if self.move_to_pathway(pathway["id"]):
+                            print(f"Moving to pathway {pathway['id']}")
+                            break
+
+                # If no level or pathway was clicked, start dragging
                 if not self.moving:
                     self.dragging = True
                     self.last_mouse_x, self.last_mouse_y = event.pos
