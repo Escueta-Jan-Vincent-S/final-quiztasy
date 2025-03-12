@@ -40,7 +40,7 @@ class Map:
         icon_path = os.path.join(script_dir, "images", "map", "icons", f"{self.hero_type}_head_img.png")
         try:
             self.player_icon = pygame.image.load(icon_path)
-            self.player_icon = pygame.transform.scale(self.player_icon, (50, 60))
+            self.player_icon = pygame.transform.scale(self.player_icon, (100, 120))
         except pygame.error:
             print(f"Warning: Could not load {icon_path}. Using placeholder.")
             # Create a placeholder icon if file not found
