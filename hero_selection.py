@@ -159,6 +159,7 @@ class HeroSelection:
         """User confirmed hero selection with 'Yes' button."""
         print(f"Hero {self.temp_selected_hero.upper()} selection confirmed!")
         self.selected_hero = self.temp_selected_hero
+        self.game_instance.selected_hero = self.selected_hero  # ✅ Store hero in game instance
         self.confirmation_active = False
 
         # Visual feedback - show selected hero for 3 seconds

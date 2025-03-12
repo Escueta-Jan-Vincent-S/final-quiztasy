@@ -55,6 +55,7 @@ class FinalQuiztasy:
     def map(self, hero_ost_path):
         """Stops menu music, plays hero-specific map music, and loads the map."""
         print("Loading LSPU Map...")
+        self.selected_hero = "boy"
 
         # Stop the main menu music
         if self.audio_manager:
@@ -66,7 +67,7 @@ class FinalQuiztasy:
             self.audio_manager.play_music()
 
         # Load the map with a callback to return to the main menu
-        self.lspu_map = Map(self.screen, self.script_dir, self.return_to_main_menu, self.audio_manager)
+        self.lspu_map = Map(self.screen, self.script_dir, self.return_to_main_menu, self.audio_manager, self.selected_hero)
         self.hero_selection.hide()
         self.running_map = True
 
