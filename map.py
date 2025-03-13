@@ -320,3 +320,8 @@ class Map:
 
             elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 self.dragging = False
+
+            # mouse location
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
+                mouse_x, mouse_y = event.pos
+                print(f"Right-click at: ({mouse_x}, {mouse_y})")
