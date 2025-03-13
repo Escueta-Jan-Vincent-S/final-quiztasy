@@ -74,7 +74,7 @@ class Map:
 
         # Define pathways (yellow circles) with connections to levels
         self.pathways = [
-            {"id": "p1", "pos": (550, 460), "connections": [1, 2]},
+            {"id": "p1", "pos": (550, 460), "connections": [1, 2, 3]},
         ]
 
         # Define ambush points (red dots A) with 25% chance of triggering
