@@ -11,7 +11,7 @@ class MapCharacterMovement:
         # Character position
         self.character_x = initial_x
         self.character_y = initial_y
-        self.character_speed = 50 # 5 normal
+        self.character_speed = 10 # 10 normal
 
         # Animation properties
         self.direction = "front"  # Default direction is front

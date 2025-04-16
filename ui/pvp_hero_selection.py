@@ -8,7 +8,6 @@ from settings import SCREEN_WIDTH, SCREEN_HEIGHT
 
 CONFIRMATION_DELAY = pygame.USEREVENT + 1
 
-
 class PVPHeroSelection:
     def __init__(self, game_instance, background_menu):
         """Initialize PVP Hero Selection screen with character choices for both players."""
@@ -26,22 +25,32 @@ class PVPHeroSelection:
         border_path_p1 = os.path.join(game_instance.script_dir, "assets", "images", "buttons", "game modes", "hero selection", "player1_selection_border.png")
         border_path_p2 = os.path.join(game_instance.script_dir, "assets", "images", "buttons", "game modes", "hero selection", "player2_selection_border.png")
 
-        self.border_img_p1 = pygame.image.load(border_path_p1)
-        self.border_img_p2 = pygame.image.load(border_path_p2)
+        # Load and scale player selection borders
+        border_scale = 0.85  # Adjust as needed
+        original_border_p1 = pygame.image.load(border_path_p1)
+        original_border_p2 = pygame.image.load(border_path_p2)
 
-        # Position borders on left and right sides
-        self.border_rect_p1 = self.border_img_p1.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
-        self.border_rect_p2 = self.border_img_p2.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+        border_width_p1 = int(original_border_p1.get_width() * border_scale)
+        border_height_p1 = int(original_border_p1.get_height() * border_scale)
+        self.border_img_p1 = pygame.transform.scale(original_border_p1, (border_width_p1, border_height_p1))
+
+        border_width_p2 = int(original_border_p2.get_width() * border_scale)
+        border_height_p2 = int(original_border_p2.get_height() * border_scale)
+        self.border_img_p2 = pygame.transform.scale(original_border_p2, (border_width_p2, border_height_p2))
+
+        # Position borders
+        self.border_rect_p1 = self.border_img_p1.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 50))
+        self.border_rect_p2 = self.border_img_p2.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 50))
 
         # Character button positions for player 1
         self.positions_p1 = {
-            "boy": (self.border_rect_p1.centerx - 300, self.border_rect_p1.centery + 30),
-            "girl": (self.border_rect_p1.centerx + 300, self.border_rect_p1.centery + 30)
+            "boy": (self.border_rect_p1.centerx - 300, self.border_rect_p1.centery + 87),
+            "girl": (self.border_rect_p1.centerx + 300, self.border_rect_p1.centery + 87)
         }
 
         self.positions_p2 = {
-            "boy": (self.border_rect_p1.centerx - 300, self.border_rect_p1.centery + 30),
-            "girl": (self.border_rect_p1.centerx + 300, self.border_rect_p1.centery + 30)
+            "boy": (self.border_rect_p1.centerx - 300, self.border_rect_p1.centery + 87),
+            "girl": (self.border_rect_p1.centerx + 300, self.border_rect_p1.centery + 87)
         }
 
         # Load character buttons with scaling for both players
@@ -131,8 +140,7 @@ class PVPHeroSelection:
 
     def create_button(self, name, position, player, scale=1.0, freeze_duration=0):
         """Helper to create buttons with player number."""
-        base_path = os.path.join(self.game_instance.script_dir, "assets", "images", "buttons", "game modes",
-                                 "hero selection")
+        base_path = os.path.join(self.game_instance.script_dir, "assets", "images", "buttons", "game modes", "hero selection")
         return Button(
             position[0], position[1],
             os.path.join(base_path, f"{name}_hero_border_img.png"),
@@ -301,9 +309,6 @@ class PVPHeroSelection:
         self.confirmation_active = False
         self.selection_time = None
 
-        # Update status text for Player 1's turn
-        self.status_text = self.font.render("Player 1's Turn", True, (255, 255, 255))
-        self.status_rect = self.status_text.get_rect(center=(SCREEN_WIDTH // 2, 150))
 
         # Enable Player 1 buttons, disable Player 2
         for button in self.buttons_p1.values():
