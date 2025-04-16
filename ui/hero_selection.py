@@ -67,8 +67,7 @@ class HeroSelection:
         border_width = int(self.confirmation_border_original.get_width() * border_scale)
         border_height = int(self.confirmation_border_original.get_height() * border_scale)
         self.confirmation_border = pygame.transform.scale(self.confirmation_border_original,(border_width, border_height))
-        self.confirmation_border_rect = self.confirmation_border.get_rect(
-            center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+        self.confirmation_border_rect = self.confirmation_border.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
 
         # Create Yes/No buttons with appropriate scaling
         yes_btn_position = (self.confirmation_border_rect.centerx - 200, self.confirmation_border_rect.centery + 150)

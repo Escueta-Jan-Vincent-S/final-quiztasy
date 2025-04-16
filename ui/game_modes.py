@@ -3,7 +3,6 @@ import os
 from ui.button import Button
 from .back_button import BackButton
 
-
 class GameModes:
     def __init__(self, screen, audio_manager, script_dir, scale=0.5, game_instance=None):
         self.game_instance = game_instance  # Store the game instance
@@ -54,6 +53,13 @@ class GameModes:
         for button in self.buttons.values():
             button.active = False  # Disable background buttons when prompt is active
 
+    def play_pvp(self):
+        print("Playing player-vs-player mode")
+        self.hide()  # Hide game modes
+        if self.game_instance:
+            if hasattr(self.game_instance, 'pvp_hero_selection'):
+                self.game_instance.pvp_hero_selection.show()
+
     def start_new_game(self):
         print("Starting a new game...")
         self.show_new_continue = False
@@ -91,6 +97,8 @@ class GameModes:
         print(f"Button {name} clicked!")
         if name == "sp":
             self.play_single_player()
+        elif name == "pvp":
+            self.play_pvp()
 
     def go_back(self):
         """Handles Back button click."""

@@ -1,11 +1,12 @@
 import pygame
 import os
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT, FPS
-from ui.menu_background import MenuBackground
 from managers.audio_manager import AudioManager
+from ui.menu_background import MenuBackground
 from ui.main_menu import MainMenu
 from ui.game_modes import GameModes
 from ui.hero_selection import HeroSelection
+from ui.pvp_hero_selection import PVPHeroSelection
 from maps.map import Map
 from gameplay.battle import Battle
 
@@ -29,7 +30,8 @@ class FinalQuiztasy:
         self.setup_background()
         self.setup_audio()
         self.main_menu = MainMenu(self.screen, self.audio_manager, self.script_dir, exit_callback=self.exit_game, game_instance=self)
-        self.hero_selection = HeroSelection(self, self.background_menu)  # Pass background_menu
+        self.hero_selection = HeroSelection(self, self.background_menu)
+        self.pvp_hero_selection = PVPHeroSelection(self, self.background_menu)
         self.game_modes = GameModes(self.screen, self.audio_manager, self.script_dir, scale=1.0, game_instance=self)
         self.lspu_map = None
         self.battle = None
@@ -108,9 +110,13 @@ class FinalQuiztasy:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
-            # Pass events to the main menu or hero selection based on visibility
+            # Pass events to the appropriate screen based on visibility
             if hasattr(self, 'hero_selection') and self.hero_selection.visible:
                 self.hero_selection.update(event)
+            elif hasattr(self, 'pvp_hero_selection') and self.pvp_hero_selection.visible:
+                self.pvp_hero_selection.update(event)
+            elif hasattr(self, 'game_modes') and self.game_modes.visible:
+                self.game_modes.update(event)
             else:
                 self.main_menu.handle_events(event)
 
@@ -120,9 +126,13 @@ class FinalQuiztasy:
         frame_surface = pygame.transform.scale(frame_surface, (SCREEN_WIDTH, SCREEN_HEIGHT))
         self.screen.blit(frame_surface, (0, 0))
 
-        # Draw the main menu or hero selection based on visibility
+        # Draw the appropriate UI screen based on visibility
         if hasattr(self, 'hero_selection') and self.hero_selection.visible:
             self.hero_selection.draw()
+        elif hasattr(self, 'pvp_hero_selection') and self.pvp_hero_selection.visible:
+            self.pvp_hero_selection.draw()
+        elif hasattr(self, 'game_modes') and self.game_modes.visible:
+            self.game_modes.draw()
         else:
             self.main_menu.draw()
 
