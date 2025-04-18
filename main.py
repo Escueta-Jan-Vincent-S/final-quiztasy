@@ -9,6 +9,7 @@ from ui.hero_selection import HeroSelection
 from ui.pvp_hero_selection import PVPHeroSelection
 from maps.map import Map
 from gameplay.battle import Battle
+from gameplay.pvp import PVP
 
 class FinalQuiztasy:
     def __init__(self):
@@ -35,6 +36,7 @@ class FinalQuiztasy:
         self.game_modes = GameModes(self.screen, self.audio_manager, self.script_dir, scale=1.0, game_instance=self)
         self.lspu_map = None
         self.battle = None
+        self.pvp = PVP(self)
 
         # Clock for controlling frame rate
         self.clock = pygame.time.Clock()

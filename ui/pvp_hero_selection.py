@@ -226,10 +226,18 @@ class PVPHeroSelection:
                 self.draw()
                 pygame.display.update()
 
-            # Hide this screen and return to game_modes
+            # Hide this screen
             self.hide()
-            if self.game_instance and hasattr(self.game_instance, 'game_modes'):
-                self.game_instance.game_modes.show()
+
+            # Start the PVP battle directly instead of returning to game_modes
+            if self.game_instance and hasattr(self.game_instance, 'pvp'):
+                # Initialize PVP battle with the currently selected level
+                self.game_instance.pvp.start_battle()
+            else:
+                print("Error: PVP module not found in game instance")
+                # Fallback to game_modes if pvp is not initialized
+                if hasattr(self.game_instance, 'game_modes'):
+                    self.game_instance.game_modes.show()
 
     def cancel_hero_selection(self):
         """User cancelled hero selection with 'No' button."""
@@ -308,7 +316,6 @@ class PVPHeroSelection:
         self.selected_heroes = {1: None, 2: None}  # Clear previous selections
         self.confirmation_active = False
         self.selection_time = None
-
 
         # Enable Player 1 buttons, disable Player 2
         for button in self.buttons_p1.values():
