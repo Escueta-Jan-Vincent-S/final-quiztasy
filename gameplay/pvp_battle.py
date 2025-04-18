@@ -66,7 +66,6 @@ class PVPBattle:
 
         print(f"PVP Battle initialized with Player 1: {p1_hero}, Player 2: {p2_hero}")
 
-    # Rest of the class remains unchanged...
     def return_to_menu_from_pause(self):
         """Handle returning to main menu when selected from pause menu"""
         print("Returning to main menu from pause menu")
