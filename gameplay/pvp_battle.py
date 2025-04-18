@@ -36,8 +36,9 @@ class PVPBattle:
         self.player1.rect.x = 300  # Left side position
         self.player1.rect.bottom = 700
 
-        self.player2.rect.x = SCREEN_WIDTH - 400  # Right side position
+        self.player2.rect.x = SCREEN_WIDTH - 500  # Right side position
         self.player2.rect.bottom = 700
+        self.player2.image = pygame.transform.flip(self.player2.image, True, False)
 
         # Determine which player goes first with a coin toss
         self.coin_toss = CoinToss(screen, script_dir, audio_manager, battle_instance=self)
@@ -256,18 +257,13 @@ class PVPBattle:
         # Draw timer
         timer_text = self.font.render(f"Time: {int(self.time_left)}", True, (255, 255, 255))
         timer_rect = timer_text.get_rect(center=(SCREEN_WIDTH // 2, 50))
-        pygame.draw.rect(self.screen, (0, 0, 0),
-                         (timer_rect.x - 10, timer_rect.y - 10,
-                          timer_rect.width + 20, timer_rect.height + 20))
+        pygame.draw.rect(self.screen, (0, 0, 0), (timer_rect.x - 10, timer_rect.y - 10, timer_rect.width + 20, timer_rect.height + 20))
         self.screen.blit(timer_text, timer_rect)
 
         # Draw current player turn indicator
-        turn_text = self.turn_font.render(f"Player {self.current_player}'s Turn", True,
-                                          (0, 255, 0) if self.current_player == 1 else (0, 200, 255))
+        turn_text = self.turn_font.render(f"Player {self.current_player}'s Turn", True, (0, 255, 0) if self.current_player == 1 else (0, 200, 255))
         turn_rect = turn_text.get_rect(center=(SCREEN_WIDTH // 2, 100))
-        pygame.draw.rect(self.screen, (0, 0, 0),
-                         (turn_rect.x - 10, turn_rect.y - 10,
-                          turn_rect.width + 20, turn_rect.height + 20))
+        pygame.draw.rect(self.screen, (0, 0, 0), (turn_rect.x - 10, turn_rect.y - 10, turn_rect.width + 20, turn_rect.height + 20))
         self.screen.blit(turn_text, turn_rect)
 
         # Draw question box
@@ -294,9 +290,7 @@ class PVPBattle:
         if self.battle_message and time.time() - self.message_timer < 2:
             message_text = self.font.render(self.battle_message, True, (255, 255, 0))
             message_rect = message_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 50))
-            pygame.draw.rect(self.screen, (0, 0, 0),
-                             (message_rect.x - 10, message_rect.y - 10,
-                              message_rect.width + 20, message_rect.height + 20))
+            pygame.draw.rect(self.screen, (0, 0, 0),(message_rect.x - 10, message_rect.y - 10, message_rect.width + 20, message_rect.height + 20))
             self.screen.blit(message_text, message_rect)
 
         # Draw player health bars
