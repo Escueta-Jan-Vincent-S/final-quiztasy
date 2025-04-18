@@ -8,6 +8,7 @@ from settings import SCREEN_WIDTH, SCREEN_HEIGHT, FPS, FONT_PATH
 from .pause import Pause
 from .coin_toss import CoinToss
 
+
 class PVPBattle:
     def __init__(self, screen, script_dir, p1_hero="boy", p2_hero="girl", audio_manager=None, game_instance=None):
         self.screen = screen
@@ -23,13 +24,20 @@ class PVPBattle:
         self.timer_seconds = 15  # Default time for questions
         self.difficulty = 1
 
-        # Initialize players
+        # Initialize players with their chosen heroes
         self.player1 = Player(script_dir, p1_hero)
         self.player2 = Player(script_dir, p2_hero)
 
-        # Adjust player positions (left and right sides)
-        self.player1.x = SCREEN_WIDTH // 4
-        self.player2.x = 3 * SCREEN_WIDTH // 4
+        # Disable the built-in health bars in the Player class
+        self.player1.show_health_bar = False
+        self.player2.show_health_bar = False
+
+        # Set player positions properly (left and right sides)
+        self.player1.rect.x = 300  # Left side position
+        self.player1.rect.bottom = 700
+
+        self.player2.rect.x = SCREEN_WIDTH - 400  # Right side position
+        self.player2.rect.bottom = 700
 
         # Determine which player goes first with a coin toss
         self.coin_toss = CoinToss(screen, script_dir, audio_manager, battle_instance=self)
@@ -55,6 +63,9 @@ class PVPBattle:
         # Load battle music
         self.battle_music = self.load_battle_music()
 
+        print(f"PVP Battle initialized with Player 1: {p1_hero}, Player 2: {p2_hero}")
+
+    # Rest of the class remains unchanged...
     def return_to_menu_from_pause(self):
         """Handle returning to main menu when selected from pause menu"""
         print("Returning to main menu from pause menu")
@@ -225,19 +236,9 @@ class PVPBattle:
         # Draw background
         self.screen.fill((50, 50, 100))
 
-        # Draw players
-        original_p1_x = self.player1.x
-        original_p2_x = self.player2.x
-
-        self.player1.x = SCREEN_WIDTH // 4
-        self.player2.x = 3 * SCREEN_WIDTH // 4
-
+        # Draw players with their correct positions
         self.player1.draw(self.screen)
         self.player2.draw(self.screen)
-
-        # Restore positions
-        self.player1.x = original_p1_x
-        self.player2.x = original_p2_x
 
         # Draw player health bars (which don't change during coin toss)
         self.draw_health_bar(self.player1, SCREEN_WIDTH // 4, 30, "Player 1")
@@ -248,20 +249,9 @@ class PVPBattle:
         # Draw background
         self.screen.fill((50, 50, 100))
 
-        # Draw players
-        # Modify player positions for PVP configuration
-        original_p1_x = self.player1.x
-        original_p2_x = self.player2.x
-
-        self.player1.x = SCREEN_WIDTH // 4
-        self.player2.x = 3 * SCREEN_WIDTH // 4
-
+        # Draw players in their proper positions
         self.player1.draw(self.screen)
         self.player2.draw(self.screen)
-
-        # Restore positions (in case they're used elsewhere)
-        self.player1.x = original_p1_x
-        self.player2.x = original_p2_x
 
         # Draw timer
         timer_text = self.font.render(f"Time: {int(self.time_left)}", True, (255, 255, 255))

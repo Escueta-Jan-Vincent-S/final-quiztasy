@@ -8,6 +8,7 @@ class Player:
         self.player_type = player_type
         self.hp = 10  # Universal HP for every level
         self.max_hp = 10
+        self.show_health_bar = True  # Add a flag to control health bar visibility
 
         # Load player image based on type (boy or girl)
         image_path = os.path.join(script_dir, "assets", "images", "battle", self.player_type, f"{self.player_type}_stand.png")
@@ -39,20 +40,22 @@ class Player:
         """Draws the player on the screen"""
         screen.blit(self.image, self.rect)
 
-        # Draw HP bar
-        bar_width = 200
-        bar_height = 20
-        bar_x = 100
-        bar_y = screen.get_height() - bar_height - 320
+        # Only draw the HP bar if show_health_bar is True
+        if self.show_health_bar:
+            # Draw HP bar
+            bar_width = 200
+            bar_height = 20
+            bar_x = 100
+            bar_y = screen.get_height() - bar_height - 320
 
-        # Background (empty) bar
-        pygame.draw.rect(screen, (255, 0, 0), (bar_x, bar_y, bar_width, bar_height))
+            # Background (empty) bar
+            pygame.draw.rect(screen, (255, 0, 0), (bar_x, bar_y, bar_width, bar_height))
 
-        # Filled portion of the bar
-        health_width = int(bar_width * (self.hp / self.max_hp))
-        pygame.draw.rect(screen, (0, 255, 0), (bar_x, bar_y, health_width, bar_height))
+            # Filled portion of the bar
+            health_width = int(bar_width * (self.hp / self.max_hp))
+            pygame.draw.rect(screen, (0, 255, 0), (bar_x, bar_y, health_width, bar_height))
 
-        # HP text
-        font = pygame.font.Font(FONT_PATH, 20)
-        hp_text = font.render(f"{self.hp}/{self.max_hp} HP", True, (255, 255, 255))
-        screen.blit(hp_text, (bar_x + 10, bar_y + 2))
+            # HP text
+            font = pygame.font.Font(FONT_PATH, 20)
+            hp_text = font.render(f"{self.hp}/{self.max_hp} HP", True, (255, 255, 255))
+            screen.blit(hp_text, (bar_x + 10, bar_y + 2))
