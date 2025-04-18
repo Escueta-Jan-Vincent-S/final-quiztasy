@@ -36,7 +36,7 @@ class PVPBattle:
         self.player1.rect.x = 300  # Left side position
         self.player1.rect.bottom = 700
 
-        self.player2.rect.x = SCREEN_WIDTH - 500  # Right side position
+        self.player2.rect.x = SCREEN_WIDTH - 475  # Right side position
         self.player2.rect.bottom = 700
         self.player2.image = pygame.transform.flip(self.player2.image, True, False)
 
