@@ -10,8 +10,8 @@ from .hero_selection import HeroSelection
 from .option import Options
 from .exit import Exit
 from auth.login_screen import LoginScreen
+from auth.logout_screen import LogoutScreen
 from managers.auth_manager import AuthManager
-
 
 class MainMenu:
     def __init__(self, screen, audio_manager, script_dir, exit_callback=None, game_instance=None):
@@ -34,8 +34,9 @@ class MainMenu:
         self.options_handler = Options(screen, audio_manager, script_dir)
         self.exit_handler = Exit(screen, script_dir, exit_callback, audio_manager)
 
-        # Initialize login screen
+        # Initialize login screen and logout
         self.login_screen = LoginScreen(screen, script_dir, self.auth_manager, audio_manager, self.on_login_close)
+        self.logout_screen = LogoutScreen(screen, script_dir, self.auth_manager, audio_manager, self.on_logout_close)
 
         # Only create GameModes if game_instance is None
         if not self.game_instance:
@@ -150,12 +151,21 @@ class MainMenu:
                              self.login_button]
 
     def open_login_screen(self):
-        """Open the login screen when login button is clicked"""
-        self.login_screen.show()
+        """Open the login or logout screen based on login status"""
+        current_user = self.auth_manager.get_current_user()
+        if current_user:
+            self.logout_screen.show()
+        else:
+            self.login_screen.show()
 
     def on_login_close(self):
         """Callback when login screen is closed"""
         # Update login button appearance when login screen closes
+        self.update_login_button()
+
+    def on_logout_close(self):
+        """Callback when logout screen is closed"""
+        # Update login button appearance when logout screen closes
         self.update_login_button()
 
     def update_login_button(self):
@@ -233,12 +243,20 @@ class MainMenu:
             self.login_screen.handle_events(event)
             current_user = self.auth_manager.get_current_user()
 
-            # Check if login status changed
             if (previous_user is None and current_user is not None) or \
                     (previous_user is not None and current_user is None):
                 print("Login status changed - updating button")  # Debug output
                 self.update_login_button()
-        # ... rest of the method remains the same
+
+        elif self.logout_screen.visible:
+            previous_user = self.auth_manager.get_current_user()
+            self.logout_screen.handle_events(event)
+            current_user = self.auth_manager.get_current_user()
+
+            if (previous_user is not None and current_user is None):
+                print("User logged out - updating button")  # Debug output
+                self.update_login_button()
+
         elif self.exit_handler.show_exit_confirmation:
             self.exit_handler.handle_events(event)
         elif self.options_handler.show_settings:
@@ -263,6 +281,7 @@ class MainMenu:
         any_screen_active = (self.login_screen.visible or
                              (hasattr(self.login_screen,
                                       'register_screen') and self.login_screen.register_screen.visible) or
+                             self.logout_screen.visible or
                              self.exit_handler.show_exit_confirmation or
                              self.options_handler.show_settings or
                              self.is_game_modes_visible())
@@ -295,6 +314,8 @@ class MainMenu:
         if self.login_screen.visible or (
                 hasattr(self.login_screen, 'register_screen') and self.login_screen.register_screen.visible):
             self.login_screen.draw()
+        elif self.logout_screen.visible:
+            self.logout_screen.draw()
 
     def draw_login_status(self):
         """Draw login status text next to login button."""

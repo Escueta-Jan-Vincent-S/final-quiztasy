@@ -18,7 +18,7 @@ class AudioManager:
         if self.audio_enabled and not self.is_playing:
             pygame.mixer.music.load(self.music_path)
             pygame.mixer.music.play(-1)  # Loop indefinitely
-            pygame.mixer.music.set_volume(0.3)
+            pygame.mixer.music.set_volume(0.75)
             self.is_playing = True
 
     def stop_music(self):

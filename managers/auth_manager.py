@@ -74,9 +74,8 @@ class AuthManager:
 
     def validate_password(self, password):
         """Validate password meets minimum requirements"""
-        # Password must be at least 6 characters long
-        if len(password) < 6:
-            return False, "Password must be at least 6 characters"
+        if len(password) < 8:
+            return False, "Password must be at least 8 characters"
         return True, "Password is valid"
 
     def check_email_exists(self, email):
@@ -94,16 +93,6 @@ class AuthManager:
             return False
 
     def register(self, email, password):
-        """
-        Register a new user
-
-        Args:
-            email (str): User's email address
-            password (str): User's password
-
-        Returns:
-            tuple: (success, message)
-        """
         # Validate email format
         if not self.validate_email(email):
             return False, "Invalid email format"
@@ -147,16 +136,6 @@ class AuthManager:
             return False, f"Registration failed: {str(e)}"
 
     def login(self, email, password):
-        """
-        Login user with email and password
-
-        Args:
-            email (str): User's email address
-            password (str): User's password
-
-        Returns:
-            tuple: (success, message)
-        """
         try:
             conn = psycopg2.connect(**self.conn_params)
             cursor = conn.cursor()
@@ -189,9 +168,13 @@ class AuthManager:
             return False, f"Login failed: {str(e)}"
 
     def logout(self):
-        """Logout current user"""
-        self.current_user = None
-        return True, "Logged out successfully"
+        """Log out the current user"""
+        try:
+            self.current_user = None
+            return True
+        except Exception as e:
+            print(f"Error during logout: {e}")
+            return False
 
     def get_current_user(self):
         """Get current logged in user"""
