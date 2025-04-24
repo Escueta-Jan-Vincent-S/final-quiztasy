@@ -23,34 +23,14 @@ class AuthManager:
 
             # Create users table if it doesn't exist
             cursor.execute('''CREATE TABLE IF NOT EXISTS users
-            (
-                id
-                SERIAL
-                PRIMARY
-                KEY,
-                email
-                VARCHAR
-                              (
-                255
-                              )
-                UNIQUE NOT NULL,password_hash VARCHAR
-                              (
-                                  255
-                              ) NOT NULL,
+            (id SERIAL PRIMARY KEY, 
+             email VARCHAR (255) UNIQUE NOT NULL,
+                password_hash VARCHAR (255) NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
 
             # Create player_stats table for game progress and stats
             cursor.execute(''' CREATE TABLE IF NOT EXISTS player_stats
-            (
-                user_id
-                INTEGER
-                PRIMARY
-                KEY
-                REFERENCES
-                users
-                               (
-                id
-                               ),
+            (user_id INTEGER PRIMARY KEY REFERENCES users (id),
                 level INTEGER DEFAULT 1,
                 score INTEGER DEFAULT 0,
                 completed_quizzes TEXT[],

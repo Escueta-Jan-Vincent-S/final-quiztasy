@@ -80,8 +80,6 @@ class FinalQuiztasy:
             game_instance=self
         )
         self.hero_selection.hide()
-
-        # Simply run the map - it will handle its own loop
         self.lspu_map.run()
 
         # Stop hero-specific map music when exiting
