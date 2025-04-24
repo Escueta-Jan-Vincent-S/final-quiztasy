@@ -71,14 +71,7 @@ class FinalQuiztasy:
             self.audio_manager.play_music()
 
         # Create the LSPU map
-        self.lspu_map = Map(
-            self.screen,
-            self.script_dir,
-            self.return_to_main_menu,
-            self.audio_manager,
-            self.selected_hero,
-            game_instance=self
-        )
+        self.lspu_map = Map(self.screen, self.script_dir, self.return_to_main_menu, self.audio_manager, self.selected_hero, game_instance=self)
         self.hero_selection.hide()
         self.lspu_map.run()
 
