@@ -10,6 +10,7 @@ from ui.pvp_hero_selection import PVPHeroSelection
 from maps.map import Map
 from gameplay.battle import Battle
 from gameplay.pvp import PVP
+from gameplay.custom import CustomMode
 
 class FinalQuiztasy:
     def __init__(self):
@@ -34,6 +35,7 @@ class FinalQuiztasy:
         self.hero_selection = HeroSelection(self, self.background_menu)
         self.pvp_hero_selection = PVPHeroSelection(self, self.background_menu)
         self.game_modes = GameModes(self.screen, self.audio_manager, self.script_dir, scale=1.0, game_instance=self)
+        self.custom_mode = CustomMode(self.screen, self.audio_manager, self.script_dir, game_instance=self)
         self.lspu_map = None
         self.battle = None
         self.pvp = PVP(self)
@@ -108,6 +110,8 @@ class FinalQuiztasy:
                 self.hero_selection.update(event)
             elif hasattr(self, 'pvp_hero_selection') and self.pvp_hero_selection.visible:
                 self.pvp_hero_selection.update(event)
+            elif hasattr(self, 'custom_mode') and self.custom_mode.visible:  # Add this check
+                self.custom_mode.update(event)
             elif hasattr(self, 'game_modes') and self.game_modes.visible:
                 self.game_modes.update(event)
             else:
@@ -124,6 +128,8 @@ class FinalQuiztasy:
             self.hero_selection.draw()
         elif hasattr(self, 'pvp_hero_selection') and self.pvp_hero_selection.visible:
             self.pvp_hero_selection.draw()
+        elif hasattr(self, 'custom_mode') and self.custom_mode.visible:  # Add this check
+            self.custom_mode.draw()
         elif hasattr(self, 'game_modes') and self.game_modes.visible:
             self.game_modes.draw()
         else:

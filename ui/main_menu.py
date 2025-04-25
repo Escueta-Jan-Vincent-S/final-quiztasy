@@ -273,19 +273,15 @@ class MainMenu:
             self.game_modes.update(event)
 
     def draw(self):
+        # Only draw UI elements if main menu is visible
+        if not self.visible:
+            return
+
         # Draw the game logo if it's visible
         if self.show_game_logo and not self.exit_handler.show_exit_confirmation and not self.options_handler.show_settings and not self.is_game_modes_visible():
             self.screen.blit(self.game_logo, self.game_logo_rect.topleft)
 
-        # Check if any screen is active
-        any_screen_active = (self.login_screen.visible or
-                             (hasattr(self.login_screen,
-                                      'register_screen') and self.login_screen.register_screen.visible) or
-                             self.logout_screen.visible or
-                             self.exit_handler.show_exit_confirmation or
-                             self.options_handler.show_settings or
-                             self.is_game_modes_visible())
-
+        any_screen_active = (self.login_screen.visible or (hasattr(self.login_screen, 'register_screen') and self.login_screen.register_screen.visible) or self.logout_screen.visible or self.exit_handler.show_exit_confirmation or self.options_handler.show_settings or self.is_game_modes_visible())
         # Draw based on current state
         if self.exit_handler.show_exit_confirmation:
             self.exit_handler.draw()
@@ -299,10 +295,13 @@ class MainMenu:
                     self.login_button.image = self.login_button.idle_img
 
                 for button in self.menu_buttons:
-                    button.draw(self.screen)
+                    # Only draw button if it's visible
+                    if getattr(button, 'visible', True):
+                        button.draw(self.screen)
 
-        # Draw login status text
-        self.draw_login_status()
+        # Draw login status text only if not in custom mode
+        if not (self.is_game_modes_visible() and hasattr(self.game_instance, 'custom_mode_active') and self.game_instance.custom_mode_active):
+            self.draw_login_status()
 
         # Draw game modes if visible
         if self.game_instance and hasattr(self.game_instance, 'game_modes') and self.game_instance.game_modes.visible:

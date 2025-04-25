@@ -3,6 +3,7 @@ import os
 from ui.button import Button
 from .back_button import BackButton
 
+
 class GameModes:
     def __init__(self, screen, audio_manager, script_dir, scale=0.5, game_instance=None):
         self.game_instance = game_instance  # Store the game instance
@@ -41,11 +42,14 @@ class GameModes:
         self.new_continue_border_rect = self.new_continue_border.get_rect(center=(960, 540))
 
         # Create new/continue buttons with custom scaling
-        self.new_button = self.create_button(script_dir, "new", (905, 480), action=self.start_new_game, button_scale=self.new_continue_scale)
-        self.continue_button = self.create_button(script_dir, "continue", (905, 600), action=self.continue_game, button_scale=self.new_continue_scale)
+        self.new_button = self.create_button(script_dir, "new", (905, 480), action=self.start_new_game,
+                                             button_scale=self.new_continue_scale)
+        self.continue_button = self.create_button(script_dir, "continue", (905, 600), action=self.continue_game,
+                                                  button_scale=self.new_continue_scale)
 
         # Add Back button
-        self.back_button = BackButton(self.screen, script_dir, self.go_back, audio_manager=self.audio_manager, position=(100, 100), scale=0.25)
+        self.back_button = BackButton(self.screen, script_dir, self.go_back, audio_manager=self.audio_manager,
+                                      position=(100, 100), scale=0.25)
 
     def play_single_player(self):
         print("Playing single-player mode")
@@ -60,6 +64,24 @@ class GameModes:
             if hasattr(self.game_instance, 'pvp_hero_selection'):
                 self.game_instance.pvp_hero_selection.show()
 
+    def play_custom_mode(self):
+        print("Entering custom mode")
+        self.hide()  # Hide the game modes UI
+
+        # Show the custom mode
+        if self.game_instance and hasattr(self.game_instance, 'custom_mode'):
+            self.game_instance.custom_mode.show()
+
+        # Hide main menu elements
+        if self.game_instance:
+            main_menu = self.game_instance
+            if hasattr(self.game_instance, 'main_menu'):
+                main_menu = self.game_instance.main_menu
+
+            if main_menu:
+                main_menu.show_game_logo = False
+                main_menu.visible = False
+
     def start_new_game(self):
         print("Starting a new game...")
         self.show_new_continue = False
@@ -68,7 +90,8 @@ class GameModes:
         if self.game_instance:
             if hasattr(self.game_instance, 'hero_selection'):
                 self.game_instance.hero_selection.show()
-            elif hasattr(self.game_instance, 'game_instance') and hasattr(self.game_instance.game_instance, 'hero_selection'):
+            elif hasattr(self.game_instance, 'game_instance') and hasattr(self.game_instance.game_instance,
+                                                                          'hero_selection'):
                 self.game_instance.game_instance.hero_selection.show()
 
     def continue_game(self):
@@ -84,8 +107,10 @@ class GameModes:
 
         folder = "new or continue" if name in ["new", "continue"] else "modes"
         img_path = os.path.join(script_dir, "assets", "images", "buttons", "game modes", folder, f"{name}_btn_img.png")
-        hover_path = os.path.join(script_dir, "assets", "images", "buttons", "game modes", folder, f"{name}_btn_hover.png")
-        click_path = None if folder == "modes" else os.path.join(script_dir, "assets", "images", "buttons", "game modes", folder, f"{name}_btn_click.png")
+        hover_path = os.path.join(script_dir, "assets", "images", "buttons", "game modes", folder,
+                                  f"{name}_btn_hover.png")
+        click_path = None if folder == "modes" else os.path.join(script_dir, "assets", "images", "buttons",
+                                                                 "game modes", folder, f"{name}_btn_click.png")
 
         return Button(
             position[0], position[1], img_path, hover_path, click_path,
@@ -99,6 +124,8 @@ class GameModes:
             self.play_single_player()
         elif name == "pvp":
             self.play_pvp()
+        elif name == "custom":
+            self.play_custom_mode()
 
     def go_back(self):
         """Handles Back button click."""
@@ -108,10 +135,12 @@ class GameModes:
             for button in self.buttons.values():
                 button.active = True  # Re-enable buttons when closing prompt
         else:
-            self.hide()  # Hide game modes and return to main menu
+            self.hide()  # Hide game modes
             if self.game_instance:
                 if hasattr(self.game_instance, 'main_menu'):
-                    self.game_instance.main_menu.main_menu()
+                    self.game_instance.main_menu.visible = True  # Explicitly set visible to True
+                    self.game_instance.main_menu.show_game_logo = True  # Show logo
+                    self.game_instance.main_menu.main_menu()  # Show main menu elements
 
     def update(self, event):
         if self.visible:
