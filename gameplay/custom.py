@@ -62,7 +62,7 @@ class CustomMode:
         print("Create Question Clicked")
         # Add new save slot
         new_slot_index = len(self.save_slots) + 1
-        self.save_slots.append(f"Save Slot {new_slot_index}")
+        self.save_slots.append(f"Question Slot {new_slot_index}")
         self.update_max_scroll()
 
     def remove_slot(self, slot_index):
