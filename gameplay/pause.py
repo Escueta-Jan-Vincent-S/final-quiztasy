@@ -4,7 +4,6 @@ import time
 from ui.button import Button
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT, FONT_PATH
 
-
 class Pause:
     def __init__(self, screen, script_dir, audio_manager=None, scale=1, map_callback=None, menu_callback=None):
         self.screen = screen
