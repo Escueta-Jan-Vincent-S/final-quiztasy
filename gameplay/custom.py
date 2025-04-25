@@ -36,10 +36,8 @@ class CustomMode:
         self.selected_slot = None
 
         # Create Button
-        create_btn_path = os.path.join(script_dir, "assets", "images", "buttons", "game modes", "custom",
-                                       "createquestion_btn_img.png")
-        create_btn_hover_path = os.path.join(script_dir, "assets", "images", "buttons", "game modes", "custom",
-                                             "createquestion_btn_hover.png")
+        create_btn_path = os.path.join(script_dir, "assets", "images", "buttons", "game modes", "custom","createquestion_btn_img.png")
+        create_btn_hover_path = os.path.join(script_dir, "assets", "images", "buttons", "game modes", "custom", "createquestion_btn_hover.png")
 
         self.create_button = Button(
             960, 850, create_btn_path, create_btn_hover_path, None,
