@@ -183,7 +183,7 @@ class MainMenu:
                 self.menu_buttons.remove(self.login_button)
 
             # Create a new button with the registered icon
-            self.login_button = Button(100, SCREEN_HEIGHT - 100,
+            self.login_button = Button(100, 100,
                                        self.registered_icon,
                                        self.registered_icon_hover,
                                        self.registered_icon,  # No click image
@@ -196,7 +196,7 @@ class MainMenu:
                 self.menu_buttons.remove(self.login_button)
 
             # Create a new button with the login icon
-            self.login_button = Button(100, SCREEN_HEIGHT - 100,
+            self.login_button = Button(100, 100,
                                        self.login_icon,
                                        self.login_icon_hover,
                                        self.login_icon,  # No click image
@@ -330,7 +330,7 @@ class MainMenu:
 
             # Render and draw the text
             text_surf = self.login_font.render(status_text, True, pygame.Color('white'))
-            self.screen.blit(text_surf, (175, SCREEN_HEIGHT - 100))
+            self.screen.blit(text_surf, (175, 100))
 
     def is_game_modes_visible(self):
         """Helper method to check if game modes is visible regardless of where it's stored"""
