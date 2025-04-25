@@ -1,3 +1,4 @@
+import os
 import pygame
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT
 from .pvp_battle import PVPBattle
@@ -33,6 +34,14 @@ class PVP:
         # Run the battle and get the result
         result = battle.run()
 
+        # Explicitly restart menu music
+        if self.audio_manager:
+            self.audio_manager.stop_music()  # Make sure all music is stopped
+            self.audio_manager.music_path = os.path.join(self.script_dir, "assets", "audio", "ost", "menuOst.mp3")
+            if hasattr(self.audio_manager, 'audio_enabled') and self.audio_manager.audio_enabled:
+                self.audio_manager.play_music()
+                print("Menu music restarted after battle")
+
         # Handle the result
         self.handle_battle_result(result)
 
@@ -48,6 +57,12 @@ class PVP:
             # Add any rewards or progress updates here
         else:
             print("Battle was interrupted or ended without a winner.")
+
+        # Restart the menu music
+        if self.audio_manager:
+            self.audio_manager.music_path = os.path.join(self.script_dir, "assets", "audio", "ost", "menuOst.mp3")
+            if self.audio_manager.audio_enabled:
+                self.audio_manager.play_music()
 
         # Return to the main menu or game modes screen
         if hasattr(self.game_instance, 'game_modes'):

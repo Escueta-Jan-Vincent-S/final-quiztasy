@@ -350,6 +350,15 @@ class PVPBattle:
         # Stop battle music when the battle ends
         self.stop_battle_music()
 
+        # Explicitly restart menu music if game_instance is available
+        if self.game_instance and hasattr(self.game_instance, 'audio_manager'):
+            self.game_instance.audio_manager.music_path = os.path.join(self.script_dir, "assets", "audio", "ost",
+                                                                       "menuOst.mp3")
+            if hasattr(self.game_instance.audio_manager,
+                       'audio_enabled') and self.game_instance.audio_manager.audio_enabled:
+                self.game_instance.audio_manager.play_music()
+                print("Menu music restarted in battle class")
+
         # Return result (1 for player 1 victory, 2 for player 2 victory)
         if self.player2.hp <= 0:
             return 1
