@@ -39,14 +39,10 @@ class CustomMode:
         create_btn_path = os.path.join(script_dir, "assets", "images", "buttons", "game modes", "custom","createquestion_btn_img.png")
         create_btn_hover_path = os.path.join(script_dir, "assets", "images", "buttons", "game modes", "custom", "createquestion_btn_hover.png")
 
-        self.create_button = Button(
-            960, 850, create_btn_path, create_btn_hover_path, None,
-            self.create_question, scale=0.5, audio_manager=self.audio_manager
-        )
+        self.create_button = Button(960, 875, create_btn_path, create_btn_hover_path, None, self.create_question, scale=0.5, audio_manager=self.audio_manager)
 
         # Back Button
-        self.back_button = BackButton(self.screen, script_dir, self.go_back, audio_manager=self.audio_manager,
-                                      position=(100, 100), scale=0.25)
+        self.back_button = BackButton(self.screen, script_dir, self.go_back, audio_manager=self.audio_manager, position=(100, 100), scale=0.25)
 
         # Calculate maximum scroll value
         self.update_max_scroll()
