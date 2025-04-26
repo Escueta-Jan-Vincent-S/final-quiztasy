@@ -49,10 +49,8 @@ class CustomUI:
     def setup_ui_elements(self):
         """Initialize all UI elements"""
         # Create Button
-        create_btn_path = os.path.join(self.script_dir, "assets", "images", "buttons", "game modes", "custom",
-                                       "createquestion_btn_img.png")
-        create_btn_hover_path = os.path.join(self.script_dir, "assets", "images", "buttons", "game modes", "custom",
-                                             "createquestion_btn_hover.png")
+        create_btn_path = os.path.join(self.script_dir, "assets", "images", "buttons", "game modes", "custom", "createquestion_btn_img.png")
+        create_btn_hover_path = os.path.join(self.script_dir, "assets", "images", "buttons", "game modes", "custom", "createquestion_btn_hover.png")
 
         self.create_button = Button(960, 875, create_btn_path, create_btn_hover_path, None,
                                     lambda: self.custom_mode.create_question(),
@@ -65,28 +63,20 @@ class CustomUI:
                                       position=(100, 100), scale=0.25)
 
         # Load input border
-        input_border_path = os.path.join(self.script_dir, "assets", "images", "buttons", "game modes", "custom",
-                                         "input_border.png")
+        input_border_path = os.path.join(self.script_dir, "assets", "images", "buttons", "game modes", "custom", "input_border.png")
         self.input_border = pygame.image.load(input_border_path).convert_alpha()
-        self.input_border = pygame.transform.scale(self.input_border, (int(self.input_border.get_width() * 0.7),
-                                                                       int(self.input_border.get_height() * 0.7)))
+        self.input_border = pygame.transform.scale(self.input_border, (int(self.input_border.get_width() * 0.7), int(self.input_border.get_height() * 0.7)))
         self.input_border_rect = self.input_border.get_rect(center=(960, 500))
 
         # Input boxes for question and answer with updated parameters
-        self.question_input = InputBox(310, 290, 1300, 260,
-                                       placeholder="Enter your question here...", align_top_left=True, multiline=True)
-        self.answer_input = InputBox(310, 700, 1300, 120,
-                                     placeholder="Enter the answer here...", align_top_left=True)
+        self.question_input = InputBox(310, 290, 1300, 260, placeholder="Enter your question here...", align_top_left=True, multiline=True)
+        self.answer_input = InputBox(310, 700, 1300, 120, placeholder="Enter the answer here...", align_top_left=True)
 
         # Next and Done buttons
-        next_btn_path = os.path.join(self.script_dir, "assets", "images", "buttons", "game modes", "custom",
-                                     "next_btn_img.png")
-        next_btn_hover_path = os.path.join(self.script_dir, "assets", "images", "buttons", "game modes", "custom",
-                                           "next_btn_hover.png")
-        done_btn_path = os.path.join(self.script_dir, "assets", "images", "buttons", "game modes", "custom",
-                                     "done_btn_img.png")
-        done_btn_hover_path = os.path.join(self.script_dir, "assets", "images", "buttons", "game modes", "custom",
-                                           "done_btn_hover.png")
+        next_btn_path = os.path.join(self.script_dir, "assets", "images", "buttons", "game modes", "custom", "next_btn_img.png")
+        next_btn_hover_path = os.path.join(self.script_dir, "assets", "images", "buttons", "game modes", "custom", "next_btn_hover.png")
+        done_btn_path = os.path.join(self.script_dir, "assets", "images", "buttons", "game modes", "custom", "done_btn_img.png")
+        done_btn_hover_path = os.path.join(self.script_dir, "assets", "images", "buttons", "game modes", "custom", "done_btn_hover.png")
 
         self.next_button = Button(700, 950, next_btn_path, next_btn_hover_path, None,
                                   lambda: self.custom_mode.next_question(),
