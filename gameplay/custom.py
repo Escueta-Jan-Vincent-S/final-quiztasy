@@ -48,7 +48,7 @@ class CustomMode:
             self.current_questions.append({"question": question, "answer": answer})
             self.ui.reset_inputs()
             self.ui.set_status(f"Question added successfully. Total: {len(self.current_questions)}",
-                               pygame.Color('gray'))
+                               pygame.Color('green'))
         else:
             self.ui.set_status("Please enter both question and answer before proceeding", pygame.Color('red'))
 
@@ -79,7 +79,7 @@ class CustomMode:
         self.ui.update_max_scroll(self.save_slots)
 
         self.ui.set_status(f"Saved {len(self.current_questions)} questions as '{question_set_name}'",
-                           pygame.Color('gray'))
+                           pygame.Color('green'))
 
         # Set timer to exit question creation mode after showing success message
         pygame.time.set_timer(pygame.USEREVENT + 2, 1500)  # Exit after 1.5 seconds
@@ -101,7 +101,7 @@ class CustomMode:
                 self.remove_slot(slot_index)
 
                 # Show status message
-                self.ui.set_status(f"Question set '{slot_name}' deleted successfully", pygame.Color('gray'))
+                self.ui.set_status(f"Question set '{slot_name}' deleted successfully", pygame.Color('red'))
             else:
                 # Show error message
                 self.ui.set_status("Failed to delete question set", pygame.Color('red'))
