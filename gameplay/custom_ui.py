@@ -52,15 +52,9 @@ class CustomUI:
         create_btn_path = os.path.join(self.script_dir, "assets", "images", "buttons", "game modes", "custom", "createquestion_btn_img.png")
         create_btn_hover_path = os.path.join(self.script_dir, "assets", "images", "buttons", "game modes", "custom", "createquestion_btn_hover.png")
 
-        self.create_button = Button(960, 875, create_btn_path, create_btn_hover_path, None,
-                                    lambda: self.custom_mode.create_question(),
-                                    scale=0.5, audio_manager=self.audio_manager)
-
+        self.create_button = Button(960, 875, create_btn_path, create_btn_hover_path, None, lambda: self.custom_mode.create_question(), scale=0.5, audio_manager=self.audio_manager)
         # Back Button
-        self.back_button = BackButton(self.screen, self.script_dir,
-                                      lambda: self.custom_mode.go_back(),
-                                      audio_manager=self.audio_manager,
-                                      position=(100, 100), scale=0.25)
+        self.back_button = BackButton(self.screen, self.script_dir, lambda: self.custom_mode.go_back(), audio_manager=self.audio_manager, position=(100, 100), scale=0.25)
 
         # Load input border
         input_border_path = os.path.join(self.script_dir, "assets", "images", "buttons", "game modes", "custom", "input_border.png")
@@ -78,18 +72,12 @@ class CustomUI:
         done_btn_path = os.path.join(self.script_dir, "assets", "images", "buttons", "game modes", "custom", "done_btn_img.png")
         done_btn_hover_path = os.path.join(self.script_dir, "assets", "images", "buttons", "game modes", "custom", "done_btn_hover.png")
 
-        self.next_button = Button(700, 950, next_btn_path, next_btn_hover_path, None,
-                                  lambda: self.custom_mode.next_question(),
-                                  scale=0.5, audio_manager=self.audio_manager)
-        self.done_button = Button(1200, 950, done_btn_path, done_btn_hover_path, None,
-                                  lambda: self.custom_mode.done_creating(),
-                                  scale=0.5, audio_manager=self.audio_manager)
+        self.next_button = Button(700, 950, next_btn_path, next_btn_hover_path, None, lambda: self.custom_mode.next_question(), scale=0.5, audio_manager=self.audio_manager)
+        self.done_button = Button(1200, 950, done_btn_path, done_btn_hover_path, None, lambda: self.custom_mode.done_creating(), scale=0.5, audio_manager=self.audio_manager)
 
         # Load X button for removing slots
-        x_button_path = os.path.join(self.script_dir, "assets", "images", "buttons", "game modes", "custom",
-                                     "x_button.png")
-        x_button_hover_path = os.path.join(self.script_dir, "assets", "images", "buttons", "game modes", "custom",
-                                           "x_button_hover.png")
+        x_button_path = os.path.join(self.script_dir, "assets", "images", "buttons", "game modes", "custom", "x_button.png")
+        x_button_hover_path = os.path.join(self.script_dir, "assets", "images", "buttons", "game modes", "custom", "x_button_hover.png")
 
         # If the exact files don't exist, you may need to use placeholder images initially
         try:
