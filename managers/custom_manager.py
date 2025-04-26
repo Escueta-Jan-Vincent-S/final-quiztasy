@@ -22,22 +22,11 @@ class CustomManager:
 
             # Create custom_questions table if it doesn't exist
             cursor.execute('''CREATE TABLE IF NOT EXISTS custom_questions
-            (
-                id
-                SERIAL
-                PRIMARY
-                KEY,
-                name
-                VARCHAR
-                              (
-                255
-                              ) NOT NULL,
+            (id SERIAL PRIMARY KEY,
+                name VARCHAR (255) NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 questions JSONB NOT NULL,
-                user_id INTEGER NULL REFERENCES users
-                              (
-                                  id
-                              ))''')
+                user_id INTEGER NULL REFERENCES users (id))''')
 
             conn.commit()
             cursor.close()
