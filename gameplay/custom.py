@@ -46,13 +46,10 @@ class CustomMode:
         create_btn_path = os.path.join(script_dir, "assets", "images", "buttons", "game modes", "custom", "createquestion_btn_img.png")
         create_btn_hover_path = os.path.join(script_dir, "assets", "images", "buttons", "game modes", "custom", "createquestion_btn_hover.png")
 
-        self.create_button = Button(960, 875, create_btn_path, create_btn_hover_path, None, self.create_question,
-                                    scale=0.5, audio_manager=self.audio_manager)
+        self.create_button = Button(960, 875, create_btn_path, create_btn_hover_path, None, self.create_question, scale=0.5, audio_manager=self.audio_manager)
 
         # Back Button
         self.back_button = BackButton(self.screen, script_dir, self.go_back, audio_manager=self.audio_manager, position=(100, 100), scale=0.25)
-
-        # Calculate maximum scroll value
         self.update_max_scroll()
 
         # Question creation state
@@ -65,40 +62,26 @@ class CustomMode:
         self.status_timer = 0  # Timer to clear the message after some time
 
         # Load input border
-        input_border_path = os.path.join(script_dir, "assets", "images", "buttons", "game modes", "custom",
-                                         "input_border.png")
+        input_border_path = os.path.join(script_dir, "assets", "images", "buttons", "game modes", "custom", "input_border.png")
         self.input_border = pygame.image.load(input_border_path).convert_alpha()
-        self.input_border = pygame.transform.scale(self.input_border,
-                                                   (int(self.input_border.get_width() * 0.7),
-                                                    int(self.input_border.get_height() * 0.7)))
+        self.input_border = pygame.transform.scale(self.input_border,(int(self.input_border.get_width() * 0.7), int(self.input_border.get_height() * 0.7)))
         self.input_border_rect = self.input_border.get_rect(center=(960, 500))
 
         # Input boxes for question and answer with updated parameters
         self.question_input = InputBox(310, 290, 1300, 260,
-                                       placeholder="Enter your question here...",
-                                       align_top_left=True,
-                                       multiline=True)
+                                       placeholder="Enter your question here...", align_top_left=True, multiline=True)
         self.answer_input = InputBox(310, 700, 1300, 120,
-                                     placeholder="Enter the answer here...",
-                                     align_top_left=True)
+                                     placeholder="Enter the answer here...", align_top_left=True)
 
         # Next and Done buttons
-        next_btn_path = os.path.join(script_dir, "assets", "images", "buttons", "game modes", "custom",
-                                     "next_btn_img.png")
-        next_btn_hover_path = os.path.join(script_dir, "assets", "images", "buttons", "game modes", "custom",
-                                           "next_btn_hover.png")
-        done_btn_path = os.path.join(script_dir, "assets", "images", "buttons", "game modes", "custom",
-                                     "done_btn_img.png")
-        done_btn_hover_path = os.path.join(script_dir, "assets", "images", "buttons", "game modes", "custom",
-                                           "done_btn_hover.png")
+        next_btn_path = os.path.join(script_dir, "assets", "images", "buttons", "game modes", "custom", "next_btn_img.png")
+        next_btn_hover_path = os.path.join(script_dir, "assets", "images", "buttons", "game modes", "custom", "next_btn_hover.png")
+        done_btn_path = os.path.join(script_dir, "assets", "images", "buttons", "game modes", "custom", "done_btn_img.png")
+        done_btn_hover_path = os.path.join(script_dir, "assets", "images", "buttons", "game modes", "custom", "done_btn_hover.png")
 
-        self.next_button = Button(700, 950, next_btn_path, next_btn_hover_path, None, self.next_question, scale=0.5,
-                                  audio_manager=self.audio_manager)
-        self.done_button = Button(1200, 950, done_btn_path, done_btn_hover_path, None, self.done_creating, scale=0.5,
-                                  audio_manager=self.audio_manager)
+        self.next_button = Button(700, 950, next_btn_path, next_btn_hover_path, None, self.next_question, scale=0.5,audio_manager=self.audio_manager)
+        self.done_button = Button(1200, 950, done_btn_path, done_btn_hover_path, None, self.done_creating, scale=0.5, audio_manager=self.audio_manager)
 
-        # Initialize custom manager - Add the gameplay module path to sys.path
-        # Find which directory the custom_manager.py should be in
         sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
         self.custom_manager = CustomManager()
 
