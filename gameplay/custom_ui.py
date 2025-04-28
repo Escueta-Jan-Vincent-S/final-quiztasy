@@ -5,7 +5,6 @@ from ui.back_button import BackButton
 from auth.input_box import InputBox
 from settings import FONT_PATH, FONT_SIZE
 
-
 class CustomUI:
     def __init__(self, screen, audio_manager, script_dir, scale=0.5, custom_mode=None):
         self.custom_mode = custom_mode
