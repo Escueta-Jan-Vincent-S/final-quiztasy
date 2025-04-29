@@ -11,7 +11,6 @@ from .option import Options
 from .exit import Exit
 from auth.login_screen import LoginScreen
 from auth.logout_screen import LogoutScreen
-from managers.auth_manager import AuthManager
 
 class MainMenu:
     def __init__(self, screen, audio_manager, script_dir, exit_callback=None, game_instance=None):
