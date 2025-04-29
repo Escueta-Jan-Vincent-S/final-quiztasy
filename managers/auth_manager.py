@@ -21,19 +21,16 @@ class AuthManager:
             conn = psycopg2.connect(**self.conn_params)
             cursor = conn.cursor()
 
-            # Create users table if it doesn't exist
             cursor.execute('''CREATE TABLE IF NOT EXISTS users
             (id SERIAL PRIMARY KEY, 
              email VARCHAR (255) UNIQUE NOT NULL,
                 password_hash VARCHAR (255) NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
 
-            # Create player_stats table for game progress and stats
+            # Create simplified player_stats table with only level
             cursor.execute(''' CREATE TABLE IF NOT EXISTS player_stats
             (user_id INTEGER PRIMARY KEY REFERENCES users (id),
                 level INTEGER DEFAULT 1,
-                score INTEGER DEFAULT 0,
-                completed_quizzes TEXT[],
                 last_login TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
 
             conn.commit()
@@ -161,16 +158,15 @@ class AuthManager:
         return self.current_user
 
     def get_user_stats(self):
-        """Get stats for the current user"""
+        """Get stats for the current user (only level now)"""
         if not self.current_user:
             return None
-
         try:
             conn = psycopg2.connect(**self.conn_params)
             cursor = conn.cursor()
 
             cursor.execute(
-                "SELECT level, score, completed_quizzes FROM player_stats WHERE user_id = %s",
+                "SELECT level FROM player_stats WHERE user_id = %s",
                 (self.current_user["id"],)
             )
             stats = cursor.fetchone()
@@ -180,9 +176,7 @@ class AuthManager:
 
             if stats:
                 return {
-                    "level": stats[0],
-                    "score": stats[1],
-                    "completed_quizzes": stats[2] if stats[2] else []
+                    "level": stats[0]
                 }
             return None
         except Exception as e:

@@ -159,8 +159,22 @@ class MainMenu:
 
     def on_login_close(self):
         """Callback when login screen is closed"""
+        # Debug: Print current user before update
+        current_user_before = self.auth_manager.get_current_user()
+        print(f"[DEBUG] on_login_close - Current user before update: {current_user_before}")
+
         # Update login button appearance when login screen closes
         self.update_login_button()
+
+        # Debug: Print current user after update
+        current_user_after = self.auth_manager.get_current_user()
+        print(f"[DEBUG] on_login_close - Current user after update: {current_user_after}")
+
+        # Debug: Compare before and after
+        if current_user_before != current_user_after:
+            print("[DEBUG] on_login_close - User status changed!")
+        else:
+            print("[DEBUG] on_login_close - User status unchanged")
 
     def on_logout_close(self):
         """Callback when logout screen is closed"""
@@ -211,14 +225,25 @@ class MainMenu:
         self.menu_buttons.append(self.login_button)
 
     def play_game(self):
+        """Handle play button click with user status check"""
+        # Debug: Check current user status
+        current_user = self.auth_manager.get_current_user()
+        if current_user:
+            print(f"[DEBUG] play_game - User is logged in as: {current_user['email']}")
+            # Debug: Get user stats if available
+        else:
+            print("[DEBUG] play_game - No user logged in (guest mode)")
+
         print("Play button clicked!")
         self.main_menu()  # Hide main menu
         self.show_game_logo = False  # Hide the game logo
+
         # Use game_instance.game_modes if available, otherwise use self.game_modes
         if self.game_instance:
             self.game_instance.game_modes.show()
         else:
             self.game_modes.show()
+
         # Hide main menu buttons
         for button in self.menu_buttons:
             button.visible = False

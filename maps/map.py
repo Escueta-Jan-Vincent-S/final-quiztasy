@@ -4,8 +4,7 @@ from settings import SCREEN_WIDTH, SCREEN_HEIGHT, FPS
 from ui.back_button import BackButton
 from .map_character_movement import MapCharacterMovement
 from ui.button import Button
-from gameplay.level_manager import Levels
-
+from managers.level_manager import Levels
 
 class Map:
     def __init__(self, screen, script_dir, go_back_callback, audio_manager, hero_type=None, game_instance=None):

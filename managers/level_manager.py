@@ -1,7 +1,7 @@
 import pygame
 import os
-from .battle import Battle
-from .levels import Level  # Combined Level class
+from gameplay.battle import Battle
+from gameplay.levels import Level  # Combined Level class
 
 class Levels:
     def __init__(self, script_dir):
